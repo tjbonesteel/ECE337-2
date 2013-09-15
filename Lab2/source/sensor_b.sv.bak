@@ -1,0 +1,25 @@
+// $Id: $
+// File name:   sensor_b.sv
+// Created:     8/28/2013
+// Author:      Nicholas Molo
+// Lab Section: 337-03
+// Version:     1.0  Initial Design Entry
+// Description: .
+
+module sensor_b
+	(
+	input wire [3:0] sensors,
+	output reg error
+	);
+	
+	reg a;
+	reg b;
+
+	always @ (sensors[3:0])
+	begin 
+		if(sensors[0] || (sensors[3] && sensors[1]) || (sensors[2] && sensors[1])) 
+		  error = 1'b1;
+		end
+	end
+
+endmodule

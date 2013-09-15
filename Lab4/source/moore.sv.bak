@@ -1,0 +1,58 @@
+module moore
+	(
+	input wire clk,
+	input wire n_rst,
+	input wire i,
+	output reg o
+	);
+	 
+	typedef enum {ST0, ST1, ST2, ST3, ST4} state_type;
+	state_type state, nextstate;
+	
+	always@(posedge clk, negedge n_rst) begin : Reset_Logic
+		if(1'b0 == n_rst) begin
+			state <= ST0;
+		end else begin
+			state <= nextstate;
+		end
+	end
+
+	always@(state, i) begin: Next_State
+		case(state)
+			ST0: begin
+				if (1==i)
+					nextstate = ST1;
+				else
+					nextstate = ST0;
+				end
+			ST1: begin
+				if (1==i)
+					nextstate = ST2;
+				else
+					nextstate = ST0;
+				end
+			ST2: begin
+				if (0==i)
+					nextstate = ST3;
+				else
+					nextstate = ST2;
+				end
+			ST3: begin
+				if (1==i)
+					nextstate = ST4;
+				else
+					nextstate = ST0;
+				end
+			ST4: begin
+				if (1==i)
+					nextstate = ST1;
+				else
+					nextstate = ST0;
+				end
+			default: nextstate = ST0;
+		endcase
+	end
+
+	assign o <= (state == ST4) ? 1 : 0;
+
+endmodule

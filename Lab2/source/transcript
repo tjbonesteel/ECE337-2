@@ -1,0 +1,40 @@
+# //  ModelSim SE-64 10.1b Apr 26 2012 Linux 2.6.32-358.6.2.el6.x86_64
+# //
+# //  Copyright 1991-2012 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND PROPRIETARY INFORMATION
+# //  WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR ITS
+# //  LICENSORS AND IS SUBJECT TO LICENSE TERMS.
+# //
+# OpenFile full_adder.sv 
+cd ..
+# reading modelsim.ini
+ls
+# analyzed
+# docs
+# makefile
+# mapped
+# modelsim.ini
+# reports
+# schematic
+# scripts
+# source
+# source_work
+# tb_sensor_s.scomp
+# transcript
+# vsim.wlf
+# work
+vlog source/full_adder.sv
+# ** Note: (vlog-1901) OptionFile "/home/ecegrid/a/ece337/Submissions/Fall09/Lab6/PHASEII/mg51/vlog.opt" not found. Ignored.
+# Model Technology ModelSim SE-64 vlog 10.1b Compiler 2012.04 Apr 26 2012
+# -- Compiling module full_adder
+# ** Error: source/full_adder.sv(12): near "'": syntax error, unexpected '\'', expecting ')'
+# /package/eda/mg/modeltech_10.1b/modeltech/linux_x86_64/vlog failed.
+vlog source/full_adder.sv
+# ** Note: (vlog-1901) OptionFile "/home/ecegrid/a/ece337/Submissions/Fall09/Lab6/PHASEII/mg51/vlog.opt" not found. Ignored.
+# Model Technology ModelSim SE-64 vlog 10.1b Compiler 2012.04 Apr 26 2012
+# -- Compiling module full_adder
+# 
+# Top level modules:
+# 	full_adder

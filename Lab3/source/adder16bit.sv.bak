@@ -1,0 +1,38 @@
+// $Id: $
+// File name:   addr16bit.sv
+// Created:     9/3/2013
+// Author:      Nicholas Molo
+// Lab Section: 337-03
+// Version:     1.0  Initial Design Entry
+
+
+module adder16bit
+       (
+       input wire [15:0] a,
+       input wire [15:0] b,
+       input wire carry_in,
+       output wire [15:0] sum,
+       output wire overflow
+       );
+
+		wire [16:0] carrys;
+		genvar i;
+
+		assign carrys[0] = carry_in;
+		generate
+			for(i=0; i <= 15; i=i+1) begin
+				full_adder IX (.a(a[i]), .b(b[i]), .c_in(carrys[i]), .s(sum[i]), .c_out(carrys[i+1]));
+			end
+		endgenerate
+
+		assign overflow = carrys[16];
+		
+		always @ (a[0], b[0], carrys[0]) begin
+    assert(((a[0] + b[0] + carrys[0]) % 2) == sum[0])
+    else $error("Output 's' of first 1 bit adder is not correct");
+    end
+
+		
+		
+endmodule
+
