@@ -1,12 +1,13 @@
 `timescale 1ns / 1ns
 
-module tb_flex_counter
+module tb_counter
        ();
       localparam CLK_PERIOD = 2.5;
       
       reg tb_clk;
       reg tb_reset;
-      reg tb_count_up;
+      reg tb_cnt_up;
+      reg tb_1k;
       
       
       always
@@ -17,19 +18,19 @@ module tb_flex_counter
         #(CLK_PERIOD/2);
       end
 		
-	   counter dut(.clk(tb_clk), .n_reset(tb_reset), .count_up(tb_count_up));
+	   counter dut(.clk(tb_clk), .n_reset(tb_reset), .cnt_up(tb_cnt_up), .one_k_samples(tb_1k));
+	   
+	   integer i;
+	   initial begin
+	     tb_reset = 1'b0;
+	     tb_reset = 1'b1;
+	   for (i=0; i<1111; i=i+1) begin
+	     
+	      // tb_cnt_up = 1'b0;
+	       #2;
+	       //tb_cnt_up = 1'b1;
+	       #2;
+	     end
+	   end
 
-
-initial
-	begin
-	  tb_rst = 1'b0; tb_count_enable =1'b1; tb_value = 4'b0011; #100;
-	  tb_rst = 1'b1; tb_count_enable =1'b1; tb_value = 4'b0011; #100;
-	  tb_rst = 1'b0; tb_count_enable =1'b1; tb_value = 4'b0111; #100;
-	  tb_rst = 1'b1; tb_count_enable =1'b1; tb_value = 4'b0111; #100;
-	  
-	  
-	  
-  end
-		
-endmodule
-
+	 endmodule
