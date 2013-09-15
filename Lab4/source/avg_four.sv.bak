@@ -10,4 +10,4 @@ module avg_four
   output wire err
   );
   
-  //division block = bitshift right 2x 
+  

@@ -17,7 +17,7 @@ module sync
 		reg tmp1, tmp2;
 
 		always @ (posedge clk, negedge n_reset) begin
-			if (n_reset==0) begin
+			if (n_rst==0) begin
 		    	tmp1 <=0;
 			end else begin		    
 				tmp1 <= async_in;

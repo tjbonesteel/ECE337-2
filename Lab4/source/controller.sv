@@ -42,7 +42,7 @@ module controller
   //if overflow assert tmp_err and stop adding
   
   always @(overflow) begin : Overflow_Logic
-    if(overflow == 1'b1) begin
+    if(overflow == 1'b1 && tmp_op[2:0] == 2'b11) begin
       tmp_err <= 1'b1;
     end else begin
       tmp_err <= 1'b0;
