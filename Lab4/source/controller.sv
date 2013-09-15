@@ -19,13 +19,13 @@ module controller
   reg [3:0] tmp_src2;
   reg [3:0] tmp_dest;
   
-  assign err = (tmp_err || overflow);
+  assign err = tmp_err;
   assign op = tmp_op;
   assign src1 = tmp_src1;
   assign src2 = tmp_src2;
   assign dest = tmp_dest;
   
-  always(posedge clk, negedge n_reset) begin : Reset_Logic
+  always @ (posedge clk, negedge n_reset) begin : Reset_Logic
     if(n_reset == 1'b0) begin
       tmp_op <= {2{1'b0}};
       tmp_src1 <= {4{1'b0}};
@@ -38,5 +38,25 @@ module controller
       tmp_dest <= tmp_dest;
     end
   end
-
   
+  //if overflow assert tmp_err and stop adding
+  
+  always @(overflow) begin : Overflow_Logic
+    if(overflow == 1'b1) begin
+      tmp_err <= 1'b1;
+    end else begin
+      tmp_err <= 1'b0;
+    end
+  end
+  
+  
+  
+  //DR is high -> set modwait
+  //do stuff 
+  
+  
+  
+  //unset modwait
+  
+  
+endmodule
