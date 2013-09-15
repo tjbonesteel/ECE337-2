@@ -15,7 +15,7 @@ module counter
   assign one_k_samples = (counter[9:0] >= 10'b1111101000) ? 1'b1 : 1'b0;
   
   
-  always @ (posedge clk, negedge n_reset) begin
+  always @ (cnt_up, negedge n_reset) begin
    
     counter <= 1'b1;
     //if (n_reset==0) begin
