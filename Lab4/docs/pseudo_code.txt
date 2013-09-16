@@ -1,0 +1,13 @@
+idle: 	if (data_ready=0) goto idle 	//wait until data_ready=1
+store: 	if (data_ready=0) goto eidle
+		reg[3] = data					//store data in register
+		err =0
+sort1:	reg[1] = reg[2]					//reorder registers
+sort2:	reg[2] = reg[3]					//reorder registers
+add:	reg[0] = reg[1] + reg[2]		//add data, store result
+		if (V) goto eidle				//if overflow, err
+			goto idle
+eidle:	err = 1
+		if (data_ready=1) goto store	//wait until data_ready=1
+		if (data_ready=1) goto eidle
+
