@@ -9,7 +9,6 @@ module tb_counter
       reg tb_cnt_up;
       reg tb_1k;
       
-      
       always
       begin : CLK_GEN
         tb_clk = 1'b0;
@@ -23,14 +22,15 @@ module tb_counter
 	   integer i;
 	   initial begin
 	     tb_reset = 1'b0;
+	     #2;
 	     tb_reset = 1'b1;
+	     #2;
 	   for (i=0; i<1111; i=i+1) begin
-	     
-	      // tb_cnt_up = 1'b0;
-	       #2;
-	       //tb_cnt_up = 1'b1;
-	       #2;
-	     end
+	     tb_cnt_up = 1'b0;
+	     #2;
+	     tb_cnt_up = 1'b1;
+	     #2;
+	   end
 	   end
 
 	 endmodule
