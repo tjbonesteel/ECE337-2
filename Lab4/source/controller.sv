@@ -13,50 +13,157 @@ module controller
   output reg err
   );
   
-  reg tmp_err;
-  reg [1:0] tmp_op;
-  reg [3:0] tmp_src1;
-  reg [3:0] tmp_src2;
-  reg [3:0] tmp_dest;
+  typedef enum bit [4:0] {IDLE, EIDLE, STORE, SORT1, SORT2, SORT3, SORT4, ADD1, ADD2, ADD3} state_type;
+  state_type state, nextstate;
   
-  assign err = tmp_err;
-  assign op = tmp_op;
-  assign src1 = tmp_src1;
-  assign src2 = tmp_src2;
-  assign dest = tmp_dest;
-  
-  always @ (posedge clk, negedge n_reset) begin : Reset_Logic
-    if(n_reset == 1'b0) begin
-      tmp_op <= {2{1'b0}};
-      tmp_src1 <= {4{1'b0}};
-      tmp_src2 <= {4{1'b0}};
-      tmp_dest <= {4{1'b0}};
+  reg tmpwait1;
+  reg tmpwait2;
+
+  assign modwait = tmpwait2;
+    
+  always@(posedge clk, negedge n_reset) begin : Reset_Logic
+    if(1'b0 == n_reset) begin
+      state <= IDLE;
     end else begin
-      tmp_op <= tmp_op;
-      tmp_src1 <= tmp_src1;
-      tmp_src2 <= tmp_src2;
-      tmp_dest <= tmp_dest;
+      state <= nextstate;
     end
   end
   
-  //if overflow assert tmp_err and stop adding
-  
-  always @(overflow) begin : Overflow_Logic
-    if(overflow == 1'b1 && tmp_op[2:0] == 2'b11) begin
-      tmp_err <= 1'b1;
+    
+  always@(posedge clk, negedge n_reset) begin : Modwait_Logic
+    if (state >=STORE) begin
+      tmpwait1 <= 1'b1;
+      tmpwait2 <= tmpwait1;
     end else begin
-      tmp_err <= 1'b0;
+      tmpwait1 <= 1'b0;
+      tmpwait2 <= 1'b0;
     end
+  end       
+  
+  always @ (state, dr, overflow) begin : State_Logic
+    case(state)
+      IDLE: begin
+        if (dr == 1'b0) begin
+          nextstate <= IDLE;
+        end else begin
+          nextstate <= STORE;
+        end
+      end
+      
+      EIDLE: begin
+        if (dr == 1'b0) begin
+          nextstate <= EIDLE;
+        end else begin
+          nextstate <= STORE;
+        end
+      end
+      
+      STORE: begin
+        if (dr == 1'b0) begin
+          nextstate <= EIDLE;
+        end else begin
+          nextstate <= SORT1;
+        end
+      end
+      
+      SORT1: begin
+        nextstate <= SORT2;
+      end
+        
+      SORT2: begin
+        nextstate <= SORT3;
+      end
+        
+      SORT3: begin
+        nextstate <= SORT4;
+      end
+        
+      SORT4: begin
+        nextstate <= ADD1;
+      end
+    
+      ADD1: begin
+        if (overflow == 1'b1) begin
+          nextstate <= EIDLE;
+        end else begin
+          nextstate <= ADD2;
+        end
+      end
+      
+      ADD2: begin
+        if (overflow == 1'b1) begin
+          nextstate <= EIDLE;
+        end else begin
+          nextstate <= ADD3;
+        end
+      end
+        
+      ADD3: begin
+        if (overflow == 1'b1) begin
+          nextstate <= EIDLE;
+        end else begin
+          nextstate <= IDLE;
+        end
+      end
+      
+      default: begin
+        nextstate = IDLE;
+      end
+    endcase
   end
   
-  
-  
-  //DR is high -> set modwait
-  //do stuff 
-  
-  
-  
-  //unset modwait
-  
+   always @ (state) begin : Register_Logic
+    case(state)
+      IDLE: begin
+        cnt_up = 1'b0; modwait = 1'b0; err = 1'b0;
+        op = 4'h0; src1 = 4'hf; src2 = 4'hf; dest = 4'hf;
+      end
+      
+      EIDLE: begin
+        cnt_up = 1'b0; modwait = 1'b0; err = 1'b1;
+        op = 4'h0; src1 = 4'hf; src2 = 4'hf; dest = 4'hf;
+      end
+      
+      STORE: begin
+        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        op = 4'h2; src1 = 4'hf; src2 = 4'hf; dest = 4'h5;
+      end
+        
+      SORT1: begin
+        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        op = 4'h2; src1 = 4'h2; src2 = 4'hf; dest = 4'h1;
+      end
+        
+      SORT2: begin
+        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        op = 4'h2; src1 = 4'h3; src2 = 4'hf; dest = 4'h2;
+      end
+        
+      SORT3: begin
+        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        op = 4'h2; src1 = 4'h4; src2 = 4'hf; dest = 4'h3;
+      end
+        
+      SORT4: begin
+        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        op = 4'h2; src1 = 4'h5; src2 = 4'hf; dest = 4'h5;
+      end
+        
+      ADD1: begin
+        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        op = 4'h3; src1 = 4'h1; src2 = 4'h2; dest = 4'h0;
+      end
+        
+      ADD2: begin
+        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        op = 4'h3; src1 = 4'h3; src2 = 4'h0; dest = 4'h0;
+      end
+              
+      ADD3: begin
+        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        op = 4'h3; src1 = 4'h4; src2 = 4'h0; dest = 4'h0;
+      end
+    endcase
+  end
   
 endmodule

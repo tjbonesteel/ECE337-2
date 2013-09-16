@@ -10,11 +10,11 @@ sort4:	reg[4] = reg[5]					//reorder registers
 
 add1:	reg[0] = reg[1] + reg[2]		//add data, store result
 		if (V) goto eidle				//if overflow, err
-			goto idle
+			goto add2
 
 add2:	reg[0] = reg[0] + reg[3]
 		if (V) goto eidle
-			goto idle
+			goto add3
 
 add3:	reg[0] = reg[0] + reg[4]
 		if (v) goto eidle
@@ -22,5 +22,5 @@ add3:	reg[0] = reg[0] + reg[4]
 			
 eidle:	err = 1
 		if (data_ready=1) goto store	//wait until data_ready=1
-		if (data_ready=1) goto eidle
+		if (data_ready=0) goto eidle
 
