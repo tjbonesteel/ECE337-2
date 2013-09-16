@@ -23,9 +23,9 @@ module controller
     
   always@(posedge clk, negedge n_reset) begin : Reset_Logic
     if(1'b0 == n_reset) begin
-      state <= IDLE;
+      state = IDLE;
     end else begin
-      state <= nextstate;
+      state = nextstate;
     end
   end
   
@@ -41,6 +41,7 @@ module controller
   end       
   
   always @ (state, dr, overflow) begin : State_Logic
+    //state <= nextstate;
     case(state)
       IDLE: begin
         if (dr == 1'b0) begin
@@ -107,12 +108,12 @@ module controller
       end
       
       default: begin
-        nextstate = IDLE;
+        nextstate <= IDLE;
       end
     endcase
   end
   
-   always @ (state) begin : Register_Logic
+   always @ (state, n_reset) begin : Register_Logic
     case(state)
       IDLE: begin
         cnt_up = 1'b0; err = 1'b0;
@@ -125,43 +126,43 @@ module controller
       end
       
       STORE: begin
-        cnt_up = 1'b0; err = 1'b0;
-        op = 4'h2; src1 = 4'hf; src2 = 4'hf; dest = 4'h5;
+        cnt_up = 1'b1; err = 1'b0;
+        op = 4'h2; src1 = 4'hf; src2 = 4'hf; dest = 4'h7;
       end
         
       SORT1: begin
         cnt_up = 1'b0; err = 1'b0;
-        op = 4'h2; src1 = 4'h2; src2 = 4'hf; dest = 4'h1;
+        op = 4'h1; src1 = 4'h4; src2 = 4'hf; dest = 4'h3;
       end
         
       SORT2: begin
         cnt_up = 1'b0; err = 1'b0;
-        op = 4'h2; src1 = 4'h3; src2 = 4'hf; dest = 4'h2;
+        op = 4'h1; src1 = 4'h5; src2 = 4'hf; dest = 4'h4;
       end
         
       SORT3: begin
         cnt_up = 1'b0; err = 1'b0;
-        op = 4'h2; src1 = 4'h4; src2 = 4'hf; dest = 4'h3;
+        op = 4'h1; src1 = 4'h6; src2 = 4'hf; dest = 4'h5;
       end
         
       SORT4: begin
         cnt_up = 1'b0; err = 1'b0;
-        op = 4'h2; src1 = 4'h5; src2 = 4'hf; dest = 4'h5;
+        op = 4'h1; src1 = 4'h7; src2 = 4'hf; dest = 4'h6;
       end
         
       ADD1: begin
         cnt_up = 1'b0; err = 1'b0;
-        op = 4'h3; src1 = 4'h1; src2 = 4'h2; dest = 4'h0;
+        op = 4'h3; src1 = 4'h3; src2 = 4'h4; dest = 4'h2;
       end
         
       ADD2: begin
         cnt_up = 1'b0; err = 1'b0;
-        op = 4'h3; src1 = 4'h3; src2 = 4'h0; dest = 4'h0;
+        op = 4'h3; src1 = 4'h2; src2 = 4'h5; dest = 4'h1;
       end
               
       ADD3: begin
         cnt_up = 1'b0; err = 1'b0;
-        op = 4'h3; src1 = 4'h4; src2 = 4'h0; dest = 4'h0;
+        op = 4'h3; src1 = 4'h1; src2 = 4'h6; dest = 4'h0;
       end
     endcase
   end
