@@ -115,52 +115,52 @@ module controller
    always @ (state) begin : Register_Logic
     case(state)
       IDLE: begin
-        cnt_up = 1'b0; modwait = 1'b0; err = 1'b0;
+        cnt_up = 1'b0; err = 1'b0;
         op = 4'h0; src1 = 4'hf; src2 = 4'hf; dest = 4'hf;
       end
       
       EIDLE: begin
-        cnt_up = 1'b0; modwait = 1'b0; err = 1'b1;
+        cnt_up = 1'b0; err = 1'b1;
         op = 4'h0; src1 = 4'hf; src2 = 4'hf; dest = 4'hf;
       end
       
       STORE: begin
-        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        cnt_up = 1'b0; err = 1'b0;
         op = 4'h2; src1 = 4'hf; src2 = 4'hf; dest = 4'h5;
       end
         
       SORT1: begin
-        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        cnt_up = 1'b0; err = 1'b0;
         op = 4'h2; src1 = 4'h2; src2 = 4'hf; dest = 4'h1;
       end
         
       SORT2: begin
-        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        cnt_up = 1'b0; err = 1'b0;
         op = 4'h2; src1 = 4'h3; src2 = 4'hf; dest = 4'h2;
       end
         
       SORT3: begin
-        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        cnt_up = 1'b0; err = 1'b0;
         op = 4'h2; src1 = 4'h4; src2 = 4'hf; dest = 4'h3;
       end
         
       SORT4: begin
-        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        cnt_up = 1'b0; err = 1'b0;
         op = 4'h2; src1 = 4'h5; src2 = 4'hf; dest = 4'h5;
       end
         
       ADD1: begin
-        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        cnt_up = 1'b0; err = 1'b0;
         op = 4'h3; src1 = 4'h1; src2 = 4'h2; dest = 4'h0;
       end
         
       ADD2: begin
-        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        cnt_up = 1'b0; err = 1'b0;
         op = 4'h3; src1 = 4'h3; src2 = 4'h0; dest = 4'h0;
       end
               
       ADD3: begin
-        cnt_up = 1'b0; modwait = 1'b1; err = 1'b0;
+        cnt_up = 1'b0; err = 1'b0;
         op = 4'h3; src1 = 4'h4; src2 = 4'h0; dest = 4'h0;
       end
     endcase

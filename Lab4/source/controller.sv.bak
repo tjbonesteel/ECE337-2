@@ -19,7 +19,7 @@ module controller
   reg tmpwait1;
   reg tmpwait2;
 
-  
+  assign modwait = tmpwait2;
     
   always@(posedge clk, negedge n_reset) begin : Reset_Logic
     if(1'b0 == n_reset) begin
