@@ -15,30 +15,39 @@ module flex_counter
 	  output wire rollover_flag
       );
 	  
-	  //reg tmp_rollover_flag;
-	  reg [NUM_CNT_BITS-1:0] counter;
 
-	  assign rollover_flag = (counter >= rollover_val) ? 1'b1 : 1'b0;
+	  reg [NUM_CNT_BITS-1:0] counter;
+   reg tmpflag1;
+   reg tmpflag2;
+    
+	  assign rollover_flag = tmpflag2;
+	  
+	  always @(posedge clk, negedge n_rst) begin
+	  	if (n_rst==0) begin
+			tmpflag2 <=1'b0;
+			tmpflag1 <=1'b0;
+		end else begin
+	  		tmpflag1 <= (counter >= rollover_val) ? 1'b1 : 1'b0;
+	   		tmpflag2 <= tmpflag1;
+	   end
+    end
+	  
 	  
 	  always @ (posedge clk, negedge n_rst) begin
 		  
 		  if (n_rst==0) begin
 		      counter[NUM_CNT_BITS-1:0] <= {NUM_CNT_BITS{1'b0}}; //reset flip-flops to initial values
-		     // tmp_rollover_flag <= 1'b0;
 		  end else begin
 		  	if (count_enable == 1) begin
 				
-				if(counter == rollover_val) begin
-				//	tmp_rollover_flag <= 1'b1;
+				if(counter >= rollover_val) begin
 					counter[NUM_CNT_BITS-1:0] <= {{NUM_CNT_BITS-1{1'b0}},1'b1};
 				end else begin
 					counter <= counter +1;
-					//tmp_rollover_flag <= 1'b0;
 				end
-				
+									
 			end else begin
-				counter <= counter;
-				//tmp_rollover_flag <= tmp_rollover_flag;  
+				counter <= counter; 
 		  end
 		end
 	end
