@@ -42,6 +42,7 @@ module controller
   
   always @ (state, dr, overflow) begin : State_Logic
     //state <= nextstate;
+    nextstate <= state; //try this to see if it works
     case(state)
       IDLE: begin
         if (dr == 1'b0) begin
