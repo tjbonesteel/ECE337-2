@@ -19,6 +19,7 @@ module sync
 		always @ (posedge clk, negedge n_reset) begin
 			if (n_reset==0) begin
 		    	tmp1 <=0;
+			tmp2 <=0;
 			end else begin		    
 				tmp1 <= async_in;
 				tmp2 <= tmp1;

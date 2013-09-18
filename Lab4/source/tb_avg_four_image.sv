@@ -9,7 +9,7 @@
 // Time values are specified with default units of 1ns and to a resolution of 100ps
 `timescale 1ns / 100ps
 
-module tb_avg_four_image();
+module tb_avg_four();//_image();
 
 	// Define constants
 	`define SEEK_START	0

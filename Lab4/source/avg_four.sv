@@ -6,7 +6,7 @@ module avg_four
   input wire data_ready,
   output wire one_k_samples,
   output wire modwait,
-  output reg [15:0] avg_out,
+  output wire [15:0] avg_out,
   output wire err
   );
   
@@ -20,16 +20,15 @@ module avg_four
   reg [15:0] tmp_out;
   
   
-  sync I(.clk(clk), .n_reset(n_reset), .async_in(data_ready), .sync_out(dr));
+  sync SYNC(.clk(clk), .n_reset(n_reset), .async_in(data_ready), .sync_out(dr));
   
-  controller II(.clk(clk), .n_reset(n_reset), .dr(dr), .overflow(overflow), .cnt_up(cnt_up), .modwait(modwait), .op(op), .src1(src1), .src2(src2), .dest(dest), .err(err));
+  controller CNTRL(.clk(clk), .n_reset(n_reset), .dr(dr), .overflow(overflow), .cnt_up(cnt_up), .modwait(modwait), .op(op), .src1(src1), .src2(src2), .dest(dest), .err(err));
     
-  counter III(.clk(clk), .n_reset(n_reset), .cnt_up(cnt_up), .one_k_samples(one_k_samples));
+  counter CNT(.clk(clk), .n_reset(n_reset), .cnt_up(cnt_up), .one_k_samples(one_k_samples));
   
-  datapath IV(.clk(clk), .n_reset(n_reset), .ext_data(sample_data), .op(op), .src1(src1), .src2(src2), .dest(dest), .overflow(overflow), .outreg_data(tmp_out));
+  datapath DPATH(.clk(clk), .n_reset(n_reset), .ext_data(sample_data), .op(op), .src1(src1), .src2(src2), .dest(dest), .overflow(overflow), .outreg_data(tmp_out));
 
-  always @ (posedge clk) begin
-    avg_out <= tmp_out >> 2;
-  end
-  
+
+  assign avg_out = tmp_out >> 2;
+ 
 endmodule

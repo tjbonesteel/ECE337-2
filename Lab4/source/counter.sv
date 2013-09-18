@@ -11,16 +11,24 @@ module counter
   );
   
   reg [9:0] counter;
+ reg tmp;
 
-  assign one_k_samples = (counter[9:0] == 10'b1111101000) ? 1'b1 : 1'b0;
+  assign one_k_samples = tmp;//(counter[9:0] == 10'b1111101000) ? 1'b1 : 1'b0;
   
   always @ (posedge clk, negedge n_reset) begin
     if (n_reset==0) begin
       counter <= 10'b0; //reset flip-flops to initial values
+      tmp <= 1'b0;
     end else begin
     
      if (cnt_up) begin	//create flip flop to set count value
       counter <= counter +1;
+	if(counter[9:0] == 10'b1111101000) begin
+		tmp <= 1'b1;
+		counter[9:0] <= 10'b0;
+	end else begin
+		tmp <= 1'b0;
+	end
      end else begin
       counter <= counter;
      end
