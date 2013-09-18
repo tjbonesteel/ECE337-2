@@ -25,7 +25,9 @@ module controller
     if(1'b0 == n_reset) begin
       state <= IDLE;
       modwait <= 1'b0;
+	  tmpwait1 <= 1'b0;
 	  err <= 1'b0;
+	  tmperr <= 1'b0;
     end else begin
       state <= nextstate;
       modwait <= tmpwait1;
