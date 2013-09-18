@@ -5,7 +5,7 @@ module controller
   input  wire dr,
   input  wire overflow,
   output reg cnt_up,
-  output wire modwait,
+  output reg modwait,
   output reg [1:0] op,
   output reg [3:0] src1,
   output reg [3:0] src2,
@@ -18,14 +18,16 @@ module controller
   
   reg tmpwait1;
   reg tmperr;
-  assign modwait = tmpwait1;
+  
   assign err = tmperr;
     
   always@(posedge clk, negedge n_reset) begin : Reset_Logic
     if(1'b0 == n_reset) begin
       state <= IDLE;
+      modwait <= 1'b0;
     end else begin
       state <= nextstate;
+      modwait <= tmpwait1;
     end
   end
   

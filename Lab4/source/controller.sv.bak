@@ -5,7 +5,7 @@ module controller
   input  wire dr,
   input  wire overflow,
   output reg cnt_up,
-  output wire modwait,
+  output reg modwait,
   output reg [1:0] op,
   output reg [3:0] src1,
   output reg [3:0] src2,
@@ -18,15 +18,16 @@ module controller
   
   reg tmpwait1;
   reg tmperr;
-  assign modwait = tmpwait1;
+  
   assign err = tmperr;
     
   always@(posedge clk, negedge n_reset) begin : Reset_Logic
     if(1'b0 == n_reset) begin
       state <= IDLE;
+      modwait <= 1'b0;
     end else begin
       state <= nextstate;
-    end
+      modwait <= tmpwait1;
   end
   
 
@@ -104,7 +105,7 @@ module controller
     endcase
   end
   
-   always @ (state, n_reset) begin : Register_Logic
+   always @ (state) begin : Register_Logic
     case(state)
       IDLE: begin
         cnt_up = 1'b0; tmperr = 1'b0;
@@ -127,49 +128,49 @@ module controller
       SORT1: begin
         cnt_up = 1'b0; tmperr = 1'b0;
         op = 2'h1; src1 = 4'h4; src2 = 4'hf; dest = 4'h3;
-	tmpwait1 = 1'b0;
+	      tmpwait1 = 1'b1;
       end
         
       SORT2: begin
         cnt_up = 1'b0; tmperr = 1'b0;
         op = 2'h1; src1 = 4'h5; src2 = 4'hf; dest = 4'h4;
-	tmpwait1 = 1'b0;
+	     tmpwait1 = 1'b1;
       end
         
       SORT3: begin
         cnt_up = 1'b0; tmperr = 1'b0;
         op = 2'h1; src1 = 4'h6; src2 = 4'hf; dest = 4'h5;
-	tmpwait1 = 1'b0;
+	       tmpwait1 = 1'b1;
       end
         
       SORT4: begin
         cnt_up = 1'b0; tmperr = 1'b0;
         op = 2'h1; src1 = 4'h7; src2 = 4'hf; dest = 4'h6;
-	tmpwait1 = 1'b0;
+	     tmpwait1 = 1'b1;
       end
         
       ADD1: begin
         cnt_up = 1'b0; tmperr = 1'b0;
         op = 2'h3; src1 = 4'h3; src2 = 4'h4; dest = 4'h2;
-	tmpwait1 = 1'b0;
+	     tmpwait1 = 1'b1;
       end
         
       ADD2: begin
         cnt_up = 1'b0; tmperr = 1'b0;
         op = 2'h3; src1 = 4'h2; src2 = 4'h5; dest = 4'h1;
-	tmpwait1 = 1'b0;
+	       tmpwait1 = 1'b1;
       end
               
       ADD3: begin
         cnt_up = 1'b0; tmperr = 1'b0;
         op = 2'h3; src1 = 4'h1; src2 = 4'h6; dest = 4'h0;
-	tmpwait1 = 1'b0;
+	      tmpwait1 = 1'b1;
       end
 
      default: begin
         cnt_up = 1'b0; tmperr = 1'b1;
         op = 2'h0; src1 = 4'hf; src2 = 4'hf; dest = 4'hf;
-        tmpwait1 = 1'b0;
+        tmpwait1 = 1'b1;
      end
 
     endcase
