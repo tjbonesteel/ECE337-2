@@ -16,18 +16,18 @@ module controller
   typedef enum bit [3:0] {IDLE, EIDLE, STORE, SORT1, SORT2, SORT3, SORT4, ADD1, ADD2, ADD3} state_type;
   state_type state, nextstate;
   
-  reg tmpwait1;
-  reg tmperr;
-  
-  //assign err = tmperr;
+  reg tmpwait1 = 1'b0;
+  reg tmperr= 1'b0;
+
+
     
   always@(posedge clk, negedge n_reset) begin : Reset_Logic
     if(1'b0 == n_reset) begin
       state <= IDLE;
       modwait <= 1'b0;
-	  tmpwait1 <= 1'b0;
+
 	  err <= 1'b0;
-	  tmperr <= 1'b0;
+
     end else begin
       state <= nextstate;
       modwait <= tmpwait1;
