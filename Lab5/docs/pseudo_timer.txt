@@ -6,16 +6,13 @@ if n_rst == 0
 
 else
 	if enable_timer
+
 		enable =1; value=5;
-		enable =1; value=10;
-		enable =1; value=10;
-		enable =1; value=10;
-		enable =1; value=10;
-		enable =1; value=10;
-		enable =1; value=10;
-		enable =1; value=10;
-		enable =1; value=10;
-		enable =1; value=10;
+
+		for( i =0; i<8;i=i+1)
+			enable =1; value=10;
+			strobe =1
+		end
 
 		packet_done=1;
 	end
