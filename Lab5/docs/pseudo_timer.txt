@@ -9,7 +9,7 @@ else
 
 		enable =1; value=5;
 
-		for( i =0; i<8;i=i+1)
+		for( i =0; i<9;i=i+1)
 			enable =1; value=10;
 			strobe =1
 		end
