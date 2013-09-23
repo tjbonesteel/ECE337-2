@@ -1,0 +1,28 @@
+flex_counter cnt(.clk(clk), .n_rst(n_rst), .count_enable(enable), .rollover_val(value), .rollover_flag(strobe));
+
+
+if n_rst == 0
+	reset
+
+else
+	if enable_timer
+		enable =1; value=5;
+		enable =1; value=10;
+		enable =1; value=10;
+		enable =1; value=10;
+		enable =1; value=10;
+		enable =1; value=10;
+		enable =1; value=10;
+		enable =1; value=10;
+		enable =1; value=10;
+		enable =1; value=10;
+
+		packet_done=1;
+	end
+end
+
+
+	
+	
+	
+	
