@@ -7,7 +7,7 @@ module timer
   output wire packet_done
   );
   
-  reg value;
+  reg [3:0] value;
   reg done = 1'b0;
   int i;
   reg reset;
@@ -21,22 +21,22 @@ module timer
   always @ (clk, n_rst) begin
     
     if(1'b0 == n_rst) begin
-      value <= 1'b0;
-      done <= 1'b0;
-      reset <= 1'b0;
+      value = 1'b0;
+      done = 1'b0;
+      reset = 1'b0;
     end else begin
       
-      reset <=1'b0;
-      reset <=1'b1;
+      reset =1'b0;
+      reset =1'b1;
       value = 5;
             
       for(i=0;i<9;i=i+1) begin
-        reset <=1'b0;
-        reset <=1'b1;        
+        reset =1'b0;
+        reset =1'b1;        
         value = 10;
       end
       
-      done <= 1'b1;
+      done = 1'b1;
       
     end
     

@@ -10,9 +10,9 @@ module flex_counter
       (
       input wire clk,
       input wire n_rst,
-	  input wire count_enable,
-	  input wire [NUM_CNT_BITS-1:0] rollover_val,
-	  output wire rollover_flag
+	    input wire count_enable,
+	    input wire [NUM_CNT_BITS-1:0] rollover_val,
+	    output wire rollover_flag
       );
 	  
 	  reg [NUM_CNT_BITS-1:0] counter;

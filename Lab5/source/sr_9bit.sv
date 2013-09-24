@@ -12,7 +12,7 @@ module sr_9bit
   reg enable;
   reg count = 0;
   
-  stp_sr #(9,1) SHIFT(.clk(clk), .n_rst(n_rst), .shift_enable(enable), .serial_in(serial_in), .output_data(data));
+  stp_sr #(9,1) SHIFT(.clk(clk), .n_rst(n_rst), .shift_enable(enable), .serial_in(serial_in), .parallel_out(data));
   
     
   assign packet_data[7:0] = data[7:0];
@@ -22,12 +22,12 @@ module sr_9bit
   always @ (clk, n_rst) begin
     
     if(1'b0 == n_rst) begin
-      data <= 1'b0;
-      enable <=1'b0;
-      count <= 1'b0;
+      //data <= 1'b0;
+      enable =1'b0;
+      count = 1'b0;
     end else begin
-      data <= data;
-      enable <=1'b1;
+      //data <= data;
+      enable =1'b1;
       count = count +1;
     end
     

@@ -11,7 +11,7 @@ module rcu
   output reg enable_timer
   );
   
-  typedef enum bit [2:0] {IDLE, READ, CHK, LOAD} state_type;
+  typedef enum bit [1:0] {IDLE, READ, CHK, LOAD} state_type;
   state_type state, nextstate;
   
   
@@ -87,6 +87,13 @@ module rcu
         load_buffer = 1'b1;
         enable_timer = 1'b0;
       end
+ 	default: begin
+	sbc_clear = 1'b0;
+        sbc_enable = 1'b0;
+        load_buffer = 1'b0;
+        enable_timer = 1'b0;
+      end
     endcase
   end
+
 endmodule
