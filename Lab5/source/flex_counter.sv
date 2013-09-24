@@ -19,7 +19,7 @@ module flex_counter
 
 	  assign rollover_flag = (counter >= rollover_val) ? 1'b1 : 1'b0;
 	  
-	  always @ (posedge clk, negedge n_rst) begin
+	  always @ (posedge clk) begin//, negedge n_rst) begin
 		  
 		  if (n_rst==0) begin
 		      counter[NUM_CNT_BITS-1:0] <= {NUM_CNT_BITS{1'b0}}; //reset flip-flops to initial values
