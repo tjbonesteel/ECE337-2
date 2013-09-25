@@ -33,6 +33,8 @@ module timer
       clk_val <= 4'b1010;
       packet_val <= 4'b1001;
     end else begin
+      clk_val <= clk_val;
+      packet_val <= packet_val;
       
       if(enable_timer ==1'b1) begin
         reset <= 1'b1;
