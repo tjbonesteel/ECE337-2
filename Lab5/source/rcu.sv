@@ -11,7 +11,7 @@ module rcu
   output reg enable_timer
   );
   
-  typedef enum bit [1:0] {IDLE, READ, CHK, LOAD} state_type;
+  typedef enum bit [2:0] {IDLE, READ, SET, CHK, LOAD} state_type;
   state_type state, nextstate;
   
   
@@ -39,8 +39,12 @@ module rcu
         if(packet_done == 1'b0) begin
           nextstate = READ;
         end else begin
-          nextstate = CHK;
+          nextstate = SET;
         end
+      end
+      
+      SET: begin
+        nextstate = CHK;
       end
       
       CHK: begin
@@ -58,7 +62,7 @@ module rcu
   end
   
   
-  always @ (state) begin : Register_Logic
+  always @ (state, n_rst) begin : Register_Logic
     case(state)
       IDLE: begin
         sbc_clear = 1'b0;
@@ -74,9 +78,16 @@ module rcu
         enable_timer = 1'b1;
       end
       
-      CHK: begin
+      SET: begin
         sbc_clear = 1'b0;
         sbc_enable = 1'b1;
+        load_buffer = 1'b0;
+        enable_timer = 1'b0;
+      end
+      
+      CHK: begin
+        sbc_clear = 1'b0;
+        sbc_enable = 1'b0;
         load_buffer = 1'b0;
         enable_timer = 1'b0;
       end
@@ -88,7 +99,7 @@ module rcu
         enable_timer = 1'b0;
       end
  	default: begin
-	sbc_clear = 1'b0;
+	      sbc_clear = 1'b0;
         sbc_enable = 1'b0;
         load_buffer = 1'b0;
         enable_timer = 1'b0;
