@@ -1,0 +1,45 @@
+timer.sv
+
+flex_counter CNT(.clk(clk), .n_rst(n_rst), .s_rst(reset), .count_enable(enable), .rollover_val(value), .rollover_flag(some_output));
+
+
+n_rst = 0
+	reset everything
+	
+IDLE
+	if start =1
+		nextstate = CNT
+	else
+		nextstate = IDLE
+
+CNT
+	if stop = 1 
+		nextstate = STP
+	else
+		nextstate = CNT
+
+STP
+	//do ack things
+	nextstate = IDLE
+
+case(state)
+IDLE:
+	enable = 0
+	byte_received = 0
+	ack_prep = 0
+	check_ack = 0
+	ack_done = 0
+CNT:
+	enable = 1
+	byte_received = 0
+	ack_prep = 0
+	check_ack = 0
+	ack_done = 0
+STP:
+	enable = 0
+	byte_received = 0
+	ack_prep = 0
+	check_ack = 0
+	ack_done = 0
+
+
