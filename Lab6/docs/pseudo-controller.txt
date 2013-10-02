@@ -1,0 +1,61 @@
+	stop_found,
+	start_found,
+	byte_received,
+	ack_prep,
+	check_ack,
+	ack_done,
+	rw_mode,
+	address_match,
+	sda_in,
+	
+	rx_enable,
+	tx_enable,
+	read_enable,
+	sda_mode [1:0],
+	load_data
+
+IDLE
+	if start == 1
+		nextstate = CHECKADDY
+	else 
+		nextstate = IDLE
+
+CHECKADDY
+	if address_match == 1 && rw_mode == 0
+		nextstate = WRITE
+	else 
+		nextstate = NACK
+
+NACK
+	//send nack
+	nextsate = CONTINUE
+
+CONTINUE
+	if start_found == 1
+		nextstate = CHECKADDY
+	else if stop_found == 1
+		nextstate = IDLE
+	else 
+		nextstate = IDLE
+		//assert warning things are breaking
+
+WRITE
+	//ack
+
+
+
+
+PREP
+
+ACK
+
+STOP
+
+addrchek
+addwait
+	nack -> idle
+ack
+
+load data
+send data
+wait ack
