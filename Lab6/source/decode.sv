@@ -8,16 +8,31 @@ module decode
 	output wire rw_mode,
 	output wire address_match,
 	output wire stop_found,
-	output wure start_found
+	output wire start_found
 	);
 
+	reg scl_1;
+	reg scl_2;
+	reg sda_1;
+	reg sda_2;
+
+
+	assign address_match = (starting_byte[7:1] && 7'b1111000)? 1'b1 : 1'b0;
+	assign start_found = (scl_1 && !scl_2 && sda_1 && sda_2) ? 1'b1 : 1'b0;
+	assign stop_found =  (!scl_1 && scl_2 && sda_1 && sda_2) ? 1'b1 : 1'b0;
+	assign rw_mode = starting_byte[0];
+		
 	always @ (posedge clk, negedge n_rst) begin
 		if (n_rst == 1'b0) begin
-			//reset everything
+			scl_1 <= 1'b0;
+			scl_2 <= 1'b0;
+			sda_1 <= 1'b0;
+			sda_2 <= 1'b0;
 		end else begin
-			//do other  stuff
-
+			scl_1 <= scl;
+			scl_2 <= scl_1;
+			sda_1 <= sda;
+			sda_2 <= sda_1;
 		end
-
 	end
 endmodule
