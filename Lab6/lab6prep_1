@@ -1,0 +1,129 @@
+
+
+Scl_Edge Results:
+Source Results:
+Total Score: 1.75/2.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.0000/0.0000
+  Test case 1: 0.2500/0.5000
+   rising_edge_found was not stable during idle test case
+   falling_edge_found was stable and correct value during idle test case
+  Test case 2: 1.0000/1.0000
+  Test case 3: 0.5000/0.5000
+Mapped Results:
+Total Score: 1.75/2.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.0000/0.0000
+  Test case 1: 0.2500/0.5000
+   rising_edge_found was not stable during idle test case
+   falling_edge_found was stable and correct value during idle test case
+  Test case 2: 1.0000/1.0000
+  Test case 3: 0.5000/0.5000
+
+Sda_Sel Results:
+Source Results:
+Total Score: 0.80/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 1: 0.2000/0.2000
+  Test case 2: 0.2000/0.2000
+  Test case 3: 0.2000/0.2000
+  Test case 4: 0.2000/0.2000
+  Test case 5: 0.0000/0.2000
+   Incorrect sda_out value for TX '1' case
+Mapped Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 1: 0.2000/0.2000
+  Test case 2: 0.2000/0.2000
+  Test case 3: 0.2000/0.2000
+  Test case 4: 0.2000/0.2000
+  Test case 5: 0.2000/0.2000
+
+Decode Results:
+Source Results:
+Total Score: 2.00/2.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.0000/0.0000
+  Test case 1: 0.1250/0.1250
+  Test case 2: 0.1250/0.1250
+  Test case 3: 0.1250/0.1250
+  Test case 4: 0.1250/0.1250
+  Test case 5: 0.1250/0.1250
+  Test case 6: 0.1250/0.1250
+  Test case 7: 0.1250/0.1250
+  Test case 8: 0.1250/0.1250
+  Test case 9: 1.0000/1.0000
+Mapped Results:
+Total Score: 1.97/2.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.0000/0.0000
+  Test case 1: 0.0938/0.1250
+   stop_found was not stable during idle test case
+   start_found was stable and correct value during idle test case
+   stop_found was stable and correct value during idle test case
+  Test case 2: 0.1250/0.1250
+  Test case 3: 0.1250/0.1250
+  Test case 4: 0.1250/0.1250
+  Test case 5: 0.1250/0.1250
+  Test case 6: 0.1250/0.1250
+  Test case 7: 0.1250/0.1250
+  Test case 8: 0.1250/0.1250
+  Test case 9: 1.0000/1.0000
+
+Tx_Fifo Results:
+Source Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.0000/0.0000
+  Test case 1: 0.0000/0.0000
+  Test case 2: 0.5000/0.5000
+  Test case 3: 0.5000/0.5000
+Mapped Results:
+Total Score: 1.00/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 0: 0.0000/0.0000
+  Test case 1: 0.0000/0.0000
+  Test case 2: 0.5000/0.5000
+  Test case 3: 0.5000/0.5000
+
+Coverage Results from Running tb_scl_edge.sv for 100us:
+Source Results:
+Total Score: 1.00/1.00
+Mapped Results:
+Total Score: 2.00/2.00
+
+Coverage Results from Running tb_sda_sel.sv for 100us:
+Source Results:
+Total Score: 1.00/1.00
+Mapped Results:
+Total Score: 1.00/1.00
+
+Coverage Results from Running tb_decode.sv for 100us:
+Source Results:
+Total Score: 1.00/1.00
+Mapped Results:
+Total Score: 2.00/2.00
+
+Tb_Tx_Fifo Results:
+Test Case Tracking Results from Running Submitted Test bench for 100us:
+Total Score: 0.80/1.00
+Score breakdown by test case:
+ Results for basic test cases:
+  Test case 1: 0.2000/0.2000
+  Test case 2: 0.2000/0.2000
+  Test case 3: 0.2000/0.2000
+  Test case 4: 0.2000/0.2000
+  Test case 5: 0.0000/0.2000
+   FIFO full drain test was not found
+
+You have used 1 out of 3 submission attempts on Lab 6 Phase I
+mg88 ~/ece337/Lab6 >
+
