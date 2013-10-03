@@ -12,7 +12,7 @@ module tb_tx_fifo();
   reg tb_fifo_empty;
   reg tb_fifo_full;
   reg tb_write_enable;
-  reg [7:0] write_data;
+  reg [7:0] tb_write_data;
   
 	tx_fifo DUT
 	(
@@ -38,12 +38,59 @@ module tb_tx_fifo();
 	initial
 	begin 
     tb_n_rst = 1'b0;
-    #1
+    #10
     tb_n_rst = 1'b1;
+    tb_write_data = 8'b00000000;
+    tb_read_enable = 1'b0;
+    tb_write_enable = 1'b0;
+    #30;
     
+    //load all ones
+    //then read all ones
+    tb_write_data = 8'b11111111;
+    tb_write_enable = 1'b1;
+    #10;
+    tb_write_enable = 1'b0;
+    tb_read_enable = 1'b1;
+    #10;
+    tb_read_enable = 1'b0;
+    #10;
     
+    //load all zeros
+    //read all zeros
+    tb_write_data = 8'b00000000;
+    tb_write_enable = 1'b1;
+    #10
+    tb_write_enable = 1'b0;
+    tb_read_enable = 1'b1;
+    #10;
+    tb_read_enable = 1'b0;
+    #10;
     
+    //try and read empty buffer
+    tb_read_enable = 1'b1;
+    #10;
+    tb_read_enable = 1'b0;
+    #10;
     
+    //load data twice
+    tb_write_data = 8'b11111111;
+    tb_write_enable = 1'b1;
+    #10;
+    tb_write_enable = 1'b0;
+    #10
+    tb_write_data = 8'b00000000;
+    tb_write_enable = 1'b1;
+    #10;
+    tb_write_enable = 1'b0;
+    #10
+    
+    tb_read_enable = 1'b1;
+    #10;
+    tb_read_enable = 1'b0;
+    #10;
+    tb_n_rst = 1'b0;
+    #10;
     
     
     
