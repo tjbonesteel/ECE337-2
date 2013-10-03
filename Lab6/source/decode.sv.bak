@@ -18,8 +18,8 @@ module decode
 
 
 	assign address_match = (starting_byte[7:1] == 7'b1111000) ? 1'b1 : 1'b0;
-	assign start_found = (scl_1 && scl_2 && !sda_1 && sda_2) ? 1'b1 : 1'b0;
-	assign stop_found =  (scl_1 && scl_2 && sda_1 && !sda_2) ? 1'b1 : 1'b0;
+	assign start_found = (scl_1 && scl_2 && sda_1 && !sda_2) ? 1'b1 : 1'b0;
+	assign stop_found =  (scl_1 && scl_2 && !sda_1 && sda_2) ? 1'b1 : 1'b0;
 	assign rw_mode = starting_byte[0];
 		
 	always @ (posedge clk, negedge n_rst) begin
