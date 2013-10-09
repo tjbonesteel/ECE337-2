@@ -14,7 +14,7 @@ module controller
 	output reg rx_enable,
 	output reg tx_enable,
 	output reg read_enable,
-	output reg sda_mode [1:0],
+	output reg [1:0] sda_mode ,
 	load_data
 	);
 
@@ -34,87 +34,100 @@ module controller
   
   case(state)
     IDLE: begin
-      if (start_found == 1'b1) 
+      if (start_found == 1'b1) begin
         nextstate <= CHECKADDRESS;
-      else
+      end else begin
         nextstate <= IDLE;
       end
     end
-
-    CHECKADDRESS: begin
-      if (ack_prep == 1'b1)
+  
+  CHECKADDRESS: begin
+      if (ack_prep == 1'b1) begin
         nextstate <= WAITADDRESS;
-      else
+      end else begin
         nextstate <= CHECKADDRESS;
       end
     end
+    
 
-    WAITADDRES: begin
-      if (address_match == 1'b1 && rw_mode == 1'b1)
+    WAITADDRESS: begin
+      if (address_match == 1'b1 && rw_mode == 1'b1) begin
         nextstate <= SENDACK;
-      else if (address_match == 1'b0 && rw_mode = 1'b0)
+      end else if (address_match == 1'b0 && rw_mode == 1'b0) begin
         nextstate <= SENDNACK;
-      else
+      end else begin
         nextstate <= SENDNACK;
         $assert(" Address = 0 and rw mode = 1");
       end
     end
+    
 
     SENDACK: begin
-      if (ack_done == 1'b1)
+      if (ack_done == 1'b1) begin
         nextstate <= LOADDATA;
-      else
+      end else begin
         nextstate <= SENDACK;
       end
     end
+    
 
     SENDNACK: begin
-      if (ack_done == 1'b1)
+      if (ack_done == 1'b1) begin
         nextstate <= IDLE;
-      else
+      end else begin
         nextstate <= SENDNACK;
       end
     end
+    
 
     LOADDATA: begin
       nextstate <= SENDDATA;
     end
+    
 
     SENDDATA: begin
-      if (byte_received == 1'b1) //or ack_prep
+      if (byte_received == 1'b1) begin //or ack_prep
         nextstate <= STOPDATA;
-      else
+      end else begin
         nextstate <= SENDDATA;
       end
     end
 
     STOPDATA: begin
-      if (check_ack == 1'b1)
+      if (ack_prep == 1'b1) begin
         nextstate <= CHECKACK;
-      else
+      end else begin
         nextstate <= STOPDATA;
       end
     end
 
+
     CHECKACK: begin
-      if (ack_done == 1'b1 && sda_in == 1'b0)
+      if (check_ack == 1'b1 && sda_in == 1'b0) begin
         nextstate <= RECACK;
-      else if (ack_done == 1'b1 && sda_in == 1'b1)
+      end else if (check_ack == 1'b1 && sda_in == 1'b1) begin
         nextstate <= RECNACK;
       end
     end
 
+
     RECACK: begin
       nextstate <= LOADDATA;
     end
+    
 
     RECNACK: begin
-      if (stop_found == 1'b1)
+      if (stop_found == 1'b1) begin
         nextstate <= CHECKADDRESS;
-      else if (stop_found == 1'b0)
+      end else if (stop_found == 1'b0) begin
         nextstate <= IDLE;
       end
     end
+      
+    default: begin
+      nextstate <= IDLE;
+    end
+  
   endcase
 	end
 
@@ -128,6 +141,7 @@ module controller
       sda_mode = 2'b00;
       load_data = 1'b0;
     end
+    
 
     CHECKADDRESS: begin
       rx_enable = 1'b0;
@@ -136,14 +150,16 @@ module controller
       sda_mode = 2'b00;
       load_data = 1'b0;
     end
+  
 
-    WAITADDRES: begin
+    WAITADDRESS: begin
       rx_enable = 1'b0;
       tx_enable = 1'b0;
       read_enable = 1'b0;
       sda_mode = 2'b00;
       load_data = 1'b0;
     end
+ 
 
     SENDACK: begin
       rx_enable = 1'b0;
@@ -152,6 +168,7 @@ module controller
       sda_mode = 2'b01;
       load_data = 1'b0;
     end
+ 
 
     SENDNACK: begin
       rx_enable = 1'b0;
@@ -160,6 +177,7 @@ module controller
       sda_mode = 2'b10;
       load_data = 1'b0;
     end
+  
 
     LOADDATA: begin
       rx_enable = 1'b0;
@@ -168,6 +186,7 @@ module controller
       sda_mode = 2'b00;
       load_data = 1'b1;
     end
+   
 
     SENDDATA: begin
       rx_enable = 1'b0;
@@ -176,7 +195,7 @@ module controller
       sda_mode = 2'b11;
       load_data = 1'b0;
     end
-
+   
     STOPDATA: begin
       rx_enable = 1'b0;
       tx_enable = 1'b0;
@@ -184,6 +203,7 @@ module controller
       sda_mode = 2'b00;
       load_data = 1'b0;
     end
+    
 
     CHECKACK: begin
       rx_enable = 1'b0;
@@ -200,6 +220,7 @@ module controller
       sda_mode = 2'b00;
       load_data = 1'b0;
     end
+    
 
     RECNACK: begin
       rx_enable = 1'b0;
@@ -208,13 +229,16 @@ module controller
       sda_mode = 2'b00;
       load_data = 1'b0;
     end
+    
+    default: begin
+      rx_enable = 1'b1;
+      tx_enable = 1'b0;
+      read_enable = 1'b0;
+      sda_mode = 2'b00;
+      load_data = 1'b0;
+    end
 
   endcase
 	end
-
-
-
-
-
-
-
+	
+endmodule
