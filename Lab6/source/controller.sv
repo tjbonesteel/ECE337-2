@@ -77,7 +77,7 @@ module controller
 	     
 	    SENDACK: begin
 	      if (ack_done == 1'b1) begin
-	        nextstate = LOADDATA;
+	        nextstate = RECACK;
 	      end else begin
 	        nextstate = SENDACK;
 	      end
@@ -93,9 +93,11 @@ module controller
     
 
     LOADDATA: begin
+  
       nextstate = SENDDATA;
+      
     end
-    
+  
 
     SENDDATA: begin
       if (byte_received == 1'b1) begin //or ack_prep
@@ -143,7 +145,7 @@ module controller
   endcase
 	end
 
-  always @ (state) begin : Output_Logic
+  always @ (state | n_rst) begin : Output_Logic
   case(state)
 
     IDLE: begin
@@ -178,7 +180,7 @@ module controller
       tmp_tx_enable = 1'b0;
       tmp_read_enable = 1'b0;
       tmp_sda_mode = 2'b01;
-      tmp_load_data = 1'b0;
+     	tmp_load_data = 1'b0;
     end
  
 
@@ -197,8 +199,9 @@ module controller
       tmp_read_enable = 1'b0;
       tmp_sda_mode = 2'b00;
       tmp_load_data = 1'b1;
+      
     end
-   
+  
 
     SENDDATA: begin
       tmp_rx_enable = 1'b0;

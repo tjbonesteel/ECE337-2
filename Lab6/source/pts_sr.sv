@@ -50,7 +50,7 @@ always @ (posedge clk, negedge n_rst) begin
   
 end
 
-		assign serial_out = (buffer[NUM_BITS-1:0]&SHIFT_MSB) + (buffer[0]&(~SHIFT_MSB));
+		assign serial_out = (buffer[NUM_BITS-1:0]);//&SHIFT_MSB) + (buffer[0]&(~SHIFT_MSB));
 
 endmodule
 

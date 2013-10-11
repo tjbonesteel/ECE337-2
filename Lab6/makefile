@@ -62,7 +62,7 @@ M_WORK_LIB := mapped_work
 # Automatically handle whether to running on the grid or not
 LIB_CREATE	:= vlib
 COMPILE 		:= vlog -sv
-SIMULATE		:= vsim -Lf $(LABS_IP_LIB) -L $(GATE_LIB) +no_glitch_msg -coverage
+SIMULATE		:= vsim -Lf $(LABS_IP_LIB) -L $(GATE_LIB) +no_glitch_msg
 DC_SHELL		:= dc_shell-t
 
 ##############################################################################
