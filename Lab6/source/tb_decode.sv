@@ -3,7 +3,7 @@
 module tb_decode();
   
   // Define parameters
-	parameter CLK_PERIOD				= 2.5;
+	parameter CLK_PERIOD				= 10;
 	parameter SCL_PERIOD    = 300;
 	parameter sclwait       = 300;
   

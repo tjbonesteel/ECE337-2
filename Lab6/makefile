@@ -39,7 +39,7 @@ TB_HELPER_FILES	:=
 # or references to the Phase 1 submodule code file variables
 COMPONENT_FILES	:= $(SCL_EDGE_FILE) $(SDA_SEL_FILE) $(DECODE_FILE) $(TX_FIFO_FILE)
 COMPONENT_FILES += tx_sr.sv rx_sr.sv controller.sv timer.sv
-COMPONENT_FILES += flex_counter.sv stp_sr.sv pts_sr.sv
+COMPONENT_FILES += flex_counter.sv stp_sr.sv pts_sr.sv sync.sv
 
 # Specify the name of the top level file (do not include the source folder in the name)
 # NOTE: YOU WILL NEED TO SET THIS VARIABLE'S VALUE WHEN WORKING WITH HEIRARCHICAL DESIGNS

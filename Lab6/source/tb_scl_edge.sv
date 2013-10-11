@@ -3,7 +3,8 @@
 module tb_scl_edge();
 
 	// Define parameters
-	parameter CLK_PERIOD				= 2.5;
+	parameter CLK_PERIOD				= 10;
+	parameter SCL_PERIOD    = 300;
   
   reg tb_clk;
 	reg tb_n_rst;
@@ -30,26 +31,37 @@ module tb_scl_edge();
 	end
 	
 	
+	always
+	begin : SCL_GEN
+	    tb_scl = 1'b0;
+	    #(SCL_PERIOD / 3);
+	    tb_scl = 1'b1;
+	    #(SCL_PERIOD / 3); 
+	    tb_scl = 1'b0;
+	    #(SCL_PERIOD / 3);
+	end	
+	
+	
 	initial
 	begin 
 		// Initilize all inputs
 		tb_n_rst				= 1'b0; // Initially inactive
-		tb_scl	= 1'b1; // Initially idle
+		//tb_scl	= 1'b1; // Initially idle
 		
 		
 		// Get away from Time = 0
 		#0.1; 
 		tb_n_rst = 1'b1;
-		#(CLK_PERIOD*2);
-		tb_scl = 1'b0;
-		#(CLK_PERIOD*3);
-		tb_scl = 1'b1;
-		#(CLK_PERIOD*2);
-		tb_scl = 1'b0;
-		#(CLK_PERIOD);
-		tb_scl = 1'b1;
-		#(CLK_PERIOD);
-		tb_scl = 1'b0;
+		//#(CLK_PERIOD*2);
+	//	tb_scl = 1'b0;
+		//#(CLK_PERIOD*3);
+		//tb_scl = 1'b1;
+		//#(CLK_PERIOD*2);
+		//tb_scl = 1'b0;
+		//#(CLK_PERIOD);
+		//tb_scl = 1'b1;
+		//#(CLK_PERIOD);
+		//tb_scl = 1'b0;
 		
 		
 		

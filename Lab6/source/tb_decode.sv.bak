@@ -92,8 +92,11 @@ module tb_decode();
     #(sclwait );
     tb_sda_in = 1'b0;
     
-    
-    
+    tb_n_rst = 1'b0;
+    #1
+    tb_sda_in = 1'b1;
+    tb_n_rst = 1'b1;
+    tb_starting_byte = 8'b00000000;
     
 	end 
 endmodule
