@@ -24,7 +24,7 @@ module controller
 	reg [1:0] tmp_sda_mode;
 	reg tmp_load_data;
 
-	typedef enum bit [4:0] {IDLE,CHECKADDRESS, WAITADDRESS, SENDNACK, SENDACK, LOADDATA, SENDDATA, STOPDATA, CHECKACK, RECNACK, RECACK } state_type;
+	typedef enum bit [3:0] {CHECKADDRESS, WAITADDRESS, SENDNACK, SENDACK, LOADDATA, SENDDATA, STOPDATA, CHECKACK, RECNACK, RECACK,IDLE } state_type;
 	state_type state, nextstate;
 
 	always @ (posedge clk, negedge n_rst) begin
@@ -50,21 +50,21 @@ module controller
 	   case(state)
 	     IDLE: begin
 	       if (start_found == 1'b1) begin
-	         nextstate = CHECKADDRESS;
+	         nextstate = WAITADDRESS;
 	       end else begin
 	         nextstate = IDLE;
 	       end
 	     end
 	     
-	     CHECKADDRESS: begin
+	     WAITADDRESS: begin
 	       if (ack_prep == 1'b1) begin
-	         nextstate = WAITADDRESS;
-	       end else begin
 	         nextstate = CHECKADDRESS;
+	       end else begin
+	         nextstate = WAITADDRESS;
 	       end
 	     end
 	     
-	     WAITADDRESS: begin
+	     CHECKADDRESS: begin
 	       if (address_match == 1'b1 && rw_mode == 1'b1) begin
 	         nextstate = SENDACK;
 	       end else if (address_match == 1'b0 && rw_mode == 1'b0) begin
@@ -76,15 +76,15 @@ module controller
 	     end
 	     
 	    SENDACK: begin
-	      if (ack_done == 1'b1) begin
-	        nextstate = RECACK;
+	      if (check_ack== 1'b1) begin				//was ack_done
+	        nextstate = LOADDATA;
 	      end else begin
 	        nextstate = SENDACK;
 	      end
 	    end
 	    
 	    SENDNACK: begin
-        if (ack_done == 1'b1) begin
+        if (check_ack == 1'b1) begin			//was ack_done
           nextstate = IDLE;
         end else begin
           nextstate = SENDNACK;
@@ -145,7 +145,7 @@ module controller
   endcase
 	end
 
-  always @ (state | n_rst) begin : Output_Logic
+  always @ (state) begin : Output_Logic
   case(state)
 
     IDLE: begin
@@ -157,8 +157,8 @@ module controller
     end
     
 
-    CHECKADDRESS: begin
-      tmp_rx_enable = 1'b0;
+    WAITADDRESS: begin
+      tmp_rx_enable = 1'b1;
       tmp_tx_enable = 1'b0;
       tmp_read_enable = 1'b0;
       tmp_sda_mode = 2'b00;
@@ -166,7 +166,7 @@ module controller
     end
   
 
-    WAITADDRESS: begin
+    CHECKADDRESS: begin
       tmp_rx_enable = 1'b0;
       tmp_tx_enable = 1'b0;
       tmp_read_enable = 1'b0;
