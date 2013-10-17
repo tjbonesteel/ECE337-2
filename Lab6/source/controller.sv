@@ -76,7 +76,7 @@ module controller
 	     end
 	     
 	    SENDACK: begin
-	      if (check_ack== 1'b1) begin				//was ack_done
+	      if (ack_done == 1'b1) begin				//was ack_done
 	        nextstate = LOADDATA;
 	      end else begin
 	        nextstate = SENDACK;
@@ -84,7 +84,7 @@ module controller
 	    end
 	    
 	    SENDNACK: begin
-        if (check_ack == 1'b1) begin			//was ack_done
+        if (ack_done == 1'b1) begin			//was ack_done
           nextstate = IDLE;
         end else begin
           nextstate = SENDNACK;
@@ -100,7 +100,7 @@ module controller
   
 
     SENDDATA: begin
-      if (byte_received == 1'b1) begin //or ack_prep
+      if (ack_prep == 1'b1) begin //or ack_prep
         nextstate = STOPDATA;
       end else begin
         nextstate = SENDDATA;
@@ -108,7 +108,7 @@ module controller
     end
 
     STOPDATA: begin
-      if (ack_prep == 1'b1) begin
+      if (check_ack == 1'b1) begin
         nextstate = CHECKACK;
       end else begin
         nextstate = STOPDATA;
@@ -117,16 +117,18 @@ module controller
 
 
     CHECKACK: begin
-      if (check_ack == 1'b1 && sda_in == 1'b0) begin
+      if ( sda_in == 1'b0) begin
         nextstate = RECACK;
-      end else if (check_ack == 1'b1 && sda_in == 1'b1) begin
+      end else if (sda_in == 1'b1) begin
         nextstate = RECNACK;
       end
     end
 
 
     RECACK: begin
-      nextstate = LOADDATA;
+    	if(ack_done ==1'b1) begin
+      	nextstate = LOADDATA;
+  			end
     end
     
 
@@ -197,7 +199,7 @@ module controller
       tmp_rx_enable = 1'b0;
       tmp_tx_enable = 1'b0;
       tmp_read_enable = 1'b0;
-      tmp_sda_mode = 2'b00;
+      tmp_sda_mode = 2'b01;
       tmp_load_data = 1'b1;
       
     end
