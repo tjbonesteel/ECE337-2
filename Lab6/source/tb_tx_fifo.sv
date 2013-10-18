@@ -3,7 +3,7 @@
 module tb_tx_fifo();
   
   // Define parameters
-	parameter CLK_PERIOD				= 2.5;
+	parameter CLK_PERIOD				= 10;
   
   reg tb_clk;
   reg tb_n_rst;
@@ -47,39 +47,39 @@ module tb_tx_fifo();
     
     //load all ones
     //then read all ones
-    tb_write_data = 8'b11111111;
+    tb_write_data = 8'b00000001;
     tb_write_enable = 1'b1;
     #10;
     tb_write_enable = 1'b0;
-    tb_read_enable = 1'b1;
+   // tb_read_enable = 1'b1;
     #10;
-    tb_read_enable = 1'b0;
-    #10;
+  //  tb_read_enable = 1'b0;
+  //  #10;
     
     //load all zeros
     //read all zeros
-    tb_write_data = 8'b00000000;
+    tb_write_data = 8'b00000010;
     tb_write_enable = 1'b1;
     #10
     tb_write_enable = 1'b0;
-    tb_read_enable = 1'b1;
-    #10;
-    tb_read_enable = 1'b0;
+    //tb_read_enable = 1'b1;
+   // #10;
+   // tb_read_enable = 1'b0;
     #10;
     
     //try and read empty buffer
-    tb_read_enable = 1'b1;
-    #10;
-    tb_read_enable = 1'b0;
-    #10;
+   // tb_read_enable = 1'b1;
+   // #10;
+   // tb_read_enable = 1'b0;
+   // #10;
     
     //load data twice
-    tb_write_data = 8'b11111111;
+    tb_write_data = 8'b00000011;
     tb_write_enable = 1'b1;
     #10;
     tb_write_enable = 1'b0;
     #10
-    tb_write_data = 8'b00000000;
+    tb_write_data = 8'b00000100;	
     tb_write_enable = 1'b1;
     #10;
     tb_write_enable = 1'b0;
@@ -89,6 +89,19 @@ module tb_tx_fifo();
     #10;
     tb_read_enable = 1'b0;
     #10;
+    
+    tb_read_enable = 1'b1;
+    #10;
+    tb_read_enable = 1'b0;
+    #10;
+    
+    tb_read_enable = 1'b1;
+    #10;
+    tb_read_enable = 1'b0;
+    #10;
+    
+    
+    
     tb_n_rst = 1'b0;
     #10;
     

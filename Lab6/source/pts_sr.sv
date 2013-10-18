@@ -29,15 +29,15 @@ always @ (posedge clk, negedge n_rst) begin
   end else begin
     
     if(load_enable == 1'b1) begin
-      buffer[NUM_BITS-1:0] <= parallel_in[NUM_BITS-1:0];
+      buffer[NUM_BITS-1:0] <= parallel_in[NUM_BITS-1:0];// A, B, C
     end else begin
     
       if (shift_enable == 1'b1) begin
         
         if(SHIFT_MSB == 1'b1) begin
-          buffer[NUM_BITS-1:0] <= {buffer[NUM_BITS-2:0], 1'b1};
+          buffer[NUM_BITS-1:0] <= {buffer[NUM_BITS-2:0], 1'b1}; //B, C, 1
         end else begin
-          buffer[NUM_BITS-1:0] <= {1'b1, buffer[NUM_BITS-1:1]};
+          buffer[NUM_BITS-1:0] <= {1'b1, buffer[NUM_BITS-1:1]}; //1, B, C
         end
         
       end else begin
@@ -50,7 +50,7 @@ always @ (posedge clk, negedge n_rst) begin
   
 end
 
-		assign serial_out = (buffer[NUM_BITS-1:0]);//&SHIFT_MSB) + (buffer[0]&(~SHIFT_MSB));
+		assign serial_out = (buffer[NUM_BITS-1]);//&SHIFT_MSB) + (buffer[0]&(~SHIFT_MSB));
 
 endmodule
 

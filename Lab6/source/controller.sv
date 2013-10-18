@@ -24,7 +24,7 @@ module controller
 	reg [1:0] tmp_sda_mode;
 	reg tmp_load_data;
 
-	typedef enum bit [3:0] {CHECKADDRESS, WAITADDRESS, SENDNACK, SENDACK, LOADDATA, SENDDATA, STOPDATA, CHECKACK, RECNACK, RECACK,IDLE } state_type;
+	typedef enum bit [3:0] {CHECKADDRESS, WAITADDRESS, SENDNACK, SENDACK, LOADDATA, SENDDATA, STOPDATA, CHECKACK, RECNACK, RECACK,READENABLE,IDLE } state_type;
 	state_type state, nextstate;
 
 	always @ (posedge clk, negedge n_rst) begin
@@ -51,6 +51,8 @@ module controller
 	     IDLE: begin
 	       if (start_found == 1'b1) begin
 	         nextstate = WAITADDRESS;
+	       end else if (stop_found == 1'b1 )begin
+	     				nextstate = IDLE;
 	       end else begin
 	         nextstate = IDLE;
 	       end
@@ -59,6 +61,8 @@ module controller
 	     WAITADDRESS: begin
 	       if (ack_prep == 1'b1) begin
 	         nextstate = CHECKADDRESS;
+	       end else if (stop_found == 1'b1 )begin
+	     				nextstate = IDLE;
 	       end else begin
 	         nextstate = WAITADDRESS;
 	       end
@@ -69,6 +73,8 @@ module controller
 	         nextstate = SENDACK;
 	       end else if (address_match == 1'b0 && rw_mode == 1'b0) begin
 	         nextstate = SENDNACK;
+	       end else if (stop_found == 1'b1 )begin
+	     				nextstate = IDLE;
 	       end else begin
 	         nextstate = SENDNACK;
 	         //$assert(" Address = 0 and rw mode = 1");
@@ -78,6 +84,8 @@ module controller
 	    SENDACK: begin
 	      if (ack_done == 1'b1) begin				//was ack_done
 	        nextstate = LOADDATA;
+	      end else if (stop_found == 1'b1 )begin
+	     				nextstate = IDLE;
 	      end else begin
 	        nextstate = SENDACK;
 	      end
@@ -86,6 +94,8 @@ module controller
 	    SENDNACK: begin
         if (ack_done == 1'b1) begin			//was ack_done
           nextstate = IDLE;
+      		end else if (stop_found == 1'b1 )begin
+	     				nextstate = IDLE;
         end else begin
           nextstate = SENDNACK;
         end
@@ -93,9 +103,11 @@ module controller
     
 
     LOADDATA: begin
-  
-      nextstate = SENDDATA;
-      
+ 			if (stop_found == 1'b1 )begin
+	   		nextstate = IDLE;
+   			end else begin
+      	nextstate = SENDDATA;
+      end
     end
   
 
@@ -110,6 +122,8 @@ module controller
     STOPDATA: begin
       if (check_ack == 1'b1) begin
         nextstate = CHECKACK;
+    		end else if (stop_found == 1'b1 )begin
+	     				nextstate = IDLE;
       end else begin
         nextstate = STOPDATA;
       end
@@ -118,17 +132,28 @@ module controller
 
     CHECKACK: begin
       if ( sda_in == 1'b0) begin
-        nextstate = RECACK;
+        nextstate = READENABLE;
+      end else if (stop_found == 1'b1 )begin
+	     				nextstate = IDLE;
       end else if (sda_in == 1'b1) begin
         nextstate = RECNACK;
       end
     end
-
+		
+		READENABLE: begin
+			if (stop_found == 1'b1 )begin
+	   		nextstate = IDLE;
+   			end else begin
+      	nextstate = RECACK;
+      end
+		end
 
     RECACK: begin
     	if(ack_done ==1'b1) begin
       	nextstate = LOADDATA;
-  			end
+   		end else if (stop_found == 1'b1 )begin
+	   		nextstate = IDLE;
+ 			end
     end
     
 
@@ -231,6 +256,14 @@ module controller
     end
 
     RECACK: begin
+      tmp_rx_enable = 1'b0;
+      tmp_tx_enable = 1'b0;
+      tmp_read_enable = 1'b0;
+      tmp_sda_mode = 2'b00;
+      tmp_load_data = 1'b0;
+    end
+    
+    READENABLE: begin
       tmp_rx_enable = 1'b0;
       tmp_tx_enable = 1'b0;
       tmp_read_enable = 1'b1;
