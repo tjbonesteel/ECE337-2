@@ -1,0 +1,162 @@
+module timer
+  (
+  input wire clk,
+  input wire n_rst,
+  input wire rising_edge_found,
+  input wire falling_edge_found,
+  input wire stop_found,
+  input wire start_found,
+  
+  output reg byte_received,
+  output reg ack_prep, 
+  output reg check_ack,
+  output reg ack_done
+  );
+  
+  typedef enum bit [3:0] {IDLE,COUNT,REC,PREP,CHECK,DONE} state_type;
+  state_type state, nextstate;
+    
+  reg [2:0] val;
+  reg enable;
+  reg reset;
+  reg full_byte;
+  
+  reg tmp_byte_received;
+  reg tmp_ack_prep; 
+  reg tmp_check_ack;
+  reg tmp_ack_done;
+  
+  
+  
+  flex_counter #(3) CNT(.clk(clk), .n_rst(n_rst & !start_found), .s_rst(reset), .count_enable(rising_edge_found && enable), .rollover_val(val), .rollover_flag(full_byte));
+  
+  always @ ( posedge clk, negedge n_rst) begin
+    if(n_rst ==1'b0) begin
+      val <= 3'b000;
+      state <= IDLE;
+      byte_received <= 1'b0;
+      ack_prep <= 1'b0;
+      check_ack <= 1'b0;
+      ack_done <= 1'b0;
+    //  tmp_byte_received = 1'b0;
+		//	tmp_ack_prep = 1'b0;
+		//	tmp_check_ack = 1'b0;
+		//	tmp_ack_done = 1'b0;
+    end else begin
+      val <= 3'b111; //7
+      state <= nextstate;
+      byte_received <= tmp_byte_received;
+      ack_prep <= tmp_ack_prep;
+      check_ack <= tmp_check_ack;
+      ack_done <= tmp_ack_done;
+    end
+  end
+
+  always @ (state, rising_edge_found, falling_edge_found, stop_found, start_found, full_byte ) begin : State_Logic
+    nextstate = state;
+  
+  case(state)
+    IDLE: begin
+	   if (start_found == 1'b1 )begin 
+	     nextstate = COUNT;
+	   end else if (stop_found == 1'b1 )begin
+	     nextstate = IDLE;
+	   end else begin
+	     nextstate = IDLE;
+	   end
+	 end
+	 
+	 COUNT: begin
+	   if (full_byte == 1'b1 && rising_edge_found == 1'b1) begin
+	     nextstate = REC;
+	   end else if (stop_found == 1'b1 )begin
+	     nextstate = IDLE;
+	   end else begin
+	     nextstate = COUNT;
+	   end
+	 end
+	 
+	 REC: begin
+	   if (falling_edge_found == 1'b1) begin
+	     nextstate = PREP;
+	   end else if (stop_found == 1'b1 )begin
+	     nextstate = IDLE;
+	   end else begin
+	     nextstate = REC;
+	   end
+	 end
+	   
+	 PREP: begin
+	   if (rising_edge_found == 1'b1) begin
+	     nextstate = CHECK;
+	   end else if (stop_found == 1'b1 )begin
+	     nextstate = IDLE;
+	   end else begin
+	     nextstate = PREP;
+	   end
+	 end    
+	     
+	 CHECK: begin
+	   if (falling_edge_found == 1'b1) begin
+	     nextstate = DONE;
+	   end else if (stop_found == 1'b1 )begin
+	     nextstate = IDLE;
+	   end else begin
+	     nextstate = CHECK;
+	   end
+	 end
+	 
+	 DONE: begin
+	   if (stop_found == 1'b1 )begin
+	     nextstate = IDLE;
+	   end else begin
+	     nextstate = COUNT;
+	   end
+	 end
+	 
+	endcase
+end
+
+  always @ (state) begin : Output_Logic
+    
+    enable = 0;
+    reset = 1;
+    tmp_byte_received = 0;
+    tmp_ack_prep = 0;
+    tmp_check_ack = 0;
+    tmp_ack_done = 0;
+    
+  case(state)
+    
+    COUNT: begin
+      enable = 1;
+    end
+    
+    REC: begin
+      tmp_byte_received = 1;
+    end
+    
+    PREP: begin
+      tmp_ack_prep = 1;
+    end
+    
+    CHECK: begin
+      tmp_check_ack = 1;
+    end
+    
+    DONE: begin
+      tmp_ack_done = 1;
+    end
+    
+    default: begin
+      enable = 0;
+      reset = 1;
+      tmp_byte_received = 0;
+      tmp_ack_prep = 0;
+      tmp_check_ack = 0;
+      tmp_ack_done = 0;
+    end
+    
+  endcase
+  end
+endmodule
